@@ -1,0 +1,105 @@
+import java.util.*;
+
+public class GraphLab1 {
+    private int vertices;//int for the verties
+    private LinkedList<Integer>[] adjList;
+
+    // Constructor
+    public GraphLab1(int v) {
+        this.vertices = v;
+        adjList = new LinkedList[v];
+        for (int i = 0; i < v; i++) {
+            adjList[i] = new LinkedList<>();
+        }
+    }
+
+    // Add an edge (undirected)
+    public void addEdge(int a, int b) {
+        adjList[a].add(b);
+        adjList[b].add(a);
+    }
+
+    // Compute the degree of a vertex
+    public int degreeVertex(int a) {
+        return adjList[a].size();
+    }
+
+    // Print adjacent vertices
+    public void printAdjVertices(int a) {
+        System.out.print("Adjacent to " + a + ": ");
+        for (int v : adjList[a]) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+    }
+
+    // BFS traversal
+    public void BFS(int start) {
+        boolean[] visited = new boolean[vertices];
+        Queue<Integer> queue = new LinkedList<>();
+
+        visited[start] = true;
+        queue.add(start);
+
+        System.out.print("BFS traversal: ");
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            System.out.print(current + " ");
+
+            for (int neighbor : adjList[current]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.add(neighbor);
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    // DFS traversal
+    public void DFS(int start) {
+        boolean[] visited = new boolean[vertices];
+        System.out.print("DFS traversal: ");
+        DFSUtil(start, visited);
+        System.out.println();
+    }
+
+    private void DFSUtil(int v, boolean[] visited) {
+        visited[v] = true;
+        System.out.print(v + " ");
+
+        for (int neighbor : adjList[v]) {
+            if (!visited[neighbor]) {
+                DFSUtil(neighbor, visited);
+            }
+        }
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of vertices and edges: ");
+        int n = sc.nextInt();
+        int e = sc.nextInt();
+
+        GraphLab1 graph = new GraphLab1(n);
+
+        System.out.println("Enter " + e + " edges (u v):");
+        for (int i = 0; i < e; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            graph.addEdge(u, v);
+        }
+
+        // Print adjacent vertices for all
+        for (int i = 0; i < n; i++) {
+            graph.printAdjVertices(i);
+            System.out.println("Degree of vertex " + i + ": " + graph.degreeVertex(i));
+        }
+
+        graph.BFS(0); // Starting BFS from vertex 0
+        graph.DFS(0); // Starting DFS from vertex 0
+    }
+}
+
