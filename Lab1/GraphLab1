@@ -1,30 +1,42 @@
 import java.util.*;
 
+//Authors: Azaria Adhanom & Ahmed Nawaz
+//Date: May 20 2025
+
+//Given an undirected graph, you are required to create its corresponding adjacency list using the
+//Graph implementation above and print its vertices using Breadth First Search [ BFS ] and Depth
+//First Search [ DFS ]. 
+
+//"Undirected Graph" means that the graph is connected, does not contain a cycle and has n-1 edges (always one less edge than vertex)
+//Use a linked list as it is dynamic in size and does not allocate unused space
+
 public class GraphLab1 {
-    private int vertices;//int for the verties
-    private LinkedList<Integer>[] adjList;
+    private int vertices;//int for the vertices
+    private LinkedList<Integer>[] adjList;//integer that stores the adjacent vertices
 
     // Constructor
     public GraphLab1(int v) {
         this.vertices = v;
         adjList = new LinkedList[v];
-        for (int i = 0; i < v; i++) {
+        for (int i = 0; i < v; i++) { 
             adjList[i] = new LinkedList<>();
         }
     }
 
     // Add an edge (undirected)
+    //Since it is an undirected graph, you have to add the edge in both directions
     public void addEdge(int a, int b) {
         adjList[a].add(b);
         adjList[b].add(a);
     }
 
     // Compute the degree of a vertex
+    //returns the # of neighbours for a given vertex
     public int degreeVertex(int a) {
-        return adjList[a].size();
+        return adjList[a].size();//
     }
 
-    // Print adjacent vertices
+    // Print adjacent vertices (connected to one another)
     public void printAdjVertices(int a) {
         System.out.print("Adjacent to " + a + ": ");
         for (int v : adjList[a]) {
@@ -35,18 +47,18 @@ public class GraphLab1 {
 
     // BFS traversal
     public void BFS(int start) {
-        boolean[] visited = new boolean[vertices];
-        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[vertices];//prevent revisiting same nodes
+        Queue<Integer> queue = new LinkedList<>();//keeps track of verticies to visit in order
 
-        visited[start] = true;
+        visited[start] = true;//mark the starting vertex as visited so we don't reprocess it
         queue.add(start);
 
         System.out.print("BFS traversal: ");
         while (!queue.isEmpty()) {
-            int current = queue.poll();
-            System.out.print(current + " ");
+            int current = queue.poll();//takes next vertex from front of the queue
+            System.out.print(current + " ");//prints it
 
-            for (int neighbor : adjList[current]) {
+            for (int neighbor : adjList[current]) {//loops through all of the neighbours
                 if (!visited[neighbor]) {
                     visited[neighbor] = true;
                     queue.add(neighbor);
@@ -64,18 +76,17 @@ public class GraphLab1 {
         System.out.println();
     }
 
-    private void DFSUtil(int v, boolean[] visited) {
+    private void DFSUtil(int v, boolean[] visited) {//a helper method for a recursive DFS
         visited[v] = true;
         System.out.print(v + " ");
 
         for (int neighbor : adjList[v]) {
             if (!visited[neighbor]) {
-                DFSUtil(neighbor, visited);
+                DFSUtil(neighbor, visited);//this continues deep down the path until all neighbours have been visited; then it backtracks
             }
         }
     }
-
-    // Main method for testing
+// Main method for testing
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -85,6 +96,7 @@ public class GraphLab1 {
 
         GraphLab1 graph = new GraphLab1(n);
 
+        //enter the number of edges
         System.out.println("Enter " + e + " edges (u v):");
         for (int i = 0; i < e; i++) {
             int u = sc.nextInt();
@@ -98,8 +110,11 @@ public class GraphLab1 {
             System.out.println("Degree of vertex " + i + ": " + graph.degreeVertex(i));
         }
 
-        graph.BFS(0); // Starting BFS from vertex 0
-        graph.DFS(0); // Starting DFS from vertex 0
+        //Finds which node the traversial will start from
+        System.out.println("Enter the starting vertex for the traversal: ");
+        int start = sc.nextInt();
+
+        graph.BFS(start); // Starting BFS 
+        graph.DFS(start); // Starting DFS
     }
 }
-
